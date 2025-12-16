@@ -152,7 +152,7 @@ jobs:
             --option access-tokens 'github.com=${{ steps.generate-token.outputs.token }}' \
             -v -L
       - name: upload-dotfiles
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ matrix.arch }}-${{ matrix.os }}
           path: output/
