@@ -1,0 +1,33 @@
+name: check-dotfiles-tmux
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'flake.*'
+      - 'modules/**'
+      - 'tests/**'
+jobs:
+  check:
+    name: nix-flake-check
+    runs-on: ubuntu-latest
+    steps:
+      - name: generate-token
+        uses: actions/create-github-app-token@v2
+        id: generate-token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      - name: checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || '' }}
+      - name: install-nix
+        uses: DeterminateSystems/nix-installer-action@v21
+        with:
+          github-token: ${{ steps.generate-token.outputs.token }}
+      - name: nix-flake-check
+        run: |-
+          nix \
+            --option access-tokens 'github.com=${{ steps.generate-token.outputs.token }}' \
+            flake check -v -L

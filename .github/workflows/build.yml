@@ -1,0 +1,240 @@
+name: build-dotfiles-tmux
+on:
+  issue_comment:
+    types:
+      - created
+jobs:
+  matrix:
+    name: prepare-build-matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: generate-matrix
+        id: set-matrix
+        run: |-
+          comment='${{ github.event.comment.body }}'
+          k="${comment% *}"
+          v="${comment#* }"
+
+          make_matrix() {
+            echo '{'
+            echo '"arch": ['
+            if [ "$k" = 'build' ]; then
+              f='false'
+              for arch in 'aarch64' 'x86_64'; do
+                for os in 'darwin' 'linux'; do
+                  if [ "$v" = 'all' ] || [ "$v" = "$arch" ] || [ "$v" = "$os" ] || [ "$v" = "${arch}-${os}" ]; then
+                    if "$f"; then echo ','; fi
+                    echo "\"${arch}\""
+                    f='true'
+                  fi
+                done
+              done
+            fi
+            echo '],'
+            echo '"os": ['
+            if [ "$k" = 'build' ]; then
+              f='false'
+              for arch in 'aarch64' 'x86_64'; do
+                for os in 'darwin' 'linux'; do
+                  if [ "$v" = 'all' ] || [ "$v" = "$arch" ] || [ "$v" = "$os" ] || [ "$v" = "${arch}-${os}" ]; then
+                    if "$f"; then echo ','; fi
+                    echo "\"${os}\""
+                    f='true'
+                  fi
+                done
+              done
+            fi
+            echo '],'
+            echo '"include": ['
+            if [ "$k" = 'build' ]; then
+              f='false'
+              for arch in 'aarch64' 'x86_64'; do
+                for os in 'darwin' 'linux'; do
+                  if [ "$v" = 'all' ] || [ "$v" = "$arch" ] || [ "$v" = "$os" ] || [ "$v" = "${arch}-${os}" ]; then
+                    if "$f"; then echo ','; fi
+                    runner=''
+                    case "${arch}-${os}" in
+                      'aarch64-darwin') runner='ubuntu-24.04-arm' ;;
+                      'aarch64-linux') runner='ubuntu-24.04-arm' ;;
+                      'x86_64-darwin') runner='ubuntu-24.04' ;;
+                      'x86_64-linux') runner='ubuntu-24.04' ;;
+                    esac
+                    echo "{\"arch\": \"${arch}\", \"os\": \"${os}\", \"runner\": \"${runner}\"}"
+                    f='true'
+                  fi
+                done
+              done
+            fi
+            echo ']'
+            echo '}'
+          }
+
+          matrix="$(make_matrix | jq '.arch |= unique | .os |= unique')"
+          echo "$matrix" | jq .
+          echo "matrix=$(echo "$matrix" | jq -c .)" >> "${GITHUB_OUTPUT}"
+  build:
+    needs: matrix
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.matrix.outputs.matrix) }}
+    outputs:
+      head_ref: ${{ steps.pr.outputs.head_ref }}
+    name: build-${{ matrix.arch }}-${{ matrix.os }}
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: write
+    steps:
+      - name: generate-token
+        uses: actions/create-github-app-token@v2
+        id: generate-token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      - name: get-pr-branch
+        id: pr
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ steps.generate-token.outputs.token }}
+          script: |
+            const prNumber = context.payload.issue.number;
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber
+            });
+            core.setOutput('head_ref', pr.head.ref);
+      - name: checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ steps.pr.outputs.head_ref }}
+          fetch-depth: 0
+      - name: get-job-url
+        id: job-url
+        env:
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+        run: |-
+          set -euo pipefail
+          jobs_url="${{ github.api_url }}/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/attempts/${{ github.run_attempt }}/jobs"
+          job_name="${{ github.job }}"
+          job_id=$(curl -sSf "$jobs_url" \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            | jq --arg job_name 'build-${{ matrix.arch }}-${{ matrix.os }}' '.jobs[] | select(.name == $job_name) | .id')
+          echo "Job ID: $job_id"
+          echo "url=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/job/$job_id" >> "$GITHUB_OUTPUT"
+      - name: register-check
+        id: check
+        uses: LouisBrunner/checks-action@v2.0.0
+        with:
+          sha: ${{ steps.pr.outputs.head_ref }}
+          token: "${{ steps.generate-token.outputs.token }}"
+          name: "build-${{ matrix.arch }}-${{ matrix.os }}-dotfiles"
+          details_url: "${{ steps.job-url.outputs.url }}"
+          status: in_progress
+          output: |-
+            {
+              "name": "Build ${{ matrix.arch }}-${{ matrix.os }}",
+              "summary": "Building dotfiles for `build-${{ matrix.arch }}-${{ matrix.os }}`"
+            }
+      - name: install-nix
+        uses: DeterminateSystems/nix-installer-action@v21
+        with:
+          github-token: ${{ steps.generate-token.outputs.token }}
+      - name: build-dotfiles
+        id: build
+        run: |-
+          # Upload step will ignore output folder, so we remove .gitignore to avoid that
+          rm '.gitignore'
+          ./scripts/generate-dotfiles.sh '${{ matrix.arch }}-${{ matrix.os }}' -- \
+            --option access-tokens 'github.com=${{ steps.generate-token.outputs.token }}' \
+            -v -L
+      - name: upload-dotfiles
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ matrix.arch }}-${{ matrix.os }}
+          path: output/
+          if-no-files-found: error
+          include-hidden-files: true
+      - name: update-check
+        if: always()
+        uses: LouisBrunner/checks-action@v2.0.0
+        with:
+          sha: "${{ steps.commit.outputs.changes_detected && steps.commit.outputs.commit_hash || steps.pull.outputs.sha }}"
+          token: "${{ steps.generate-token.outputs.token }}"
+          check_id: "${{ steps.check.outputs.check_id }}"
+          conclusion: ${{ job.status }}
+          details_url: "${{ steps.job-url.outputs.url }}"
+          output: |-
+            {
+              "name": "Build ${{ matrix.arch }}-${{ matrix.os }}",
+              "summary": "Finished building dotfiles for `build-${{ matrix.arch }}-${{ matrix.os }}`: ✅"
+            }
+  commit:
+    needs: build
+    runs-on: ubuntu-latest
+    outputs:
+      commit_sha: ${{ steps.commit.outputs.commit_hash }}
+    permissions:
+      contents: write
+    steps:
+      - name: checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.build.outputs.head_ref }}
+          fetch-depth: 0
+      - name: get-date
+        run: |-
+          rm -rf dotfiles
+          echo "DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
+      - name: download-dotfiles
+        uses: actions/download-artifact@v6
+        with:
+          path: ./dotfiles
+      - name: import-gpg-key
+        id: import-gpg
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+      - name: commit-changes
+        id: commit
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: "build(dotfiles): ${{ env.DATE }}"
+          commit_author: "${{ steps.import-gpg.outputs.name }} <${{ steps.import-gpg.outputs.email }}>"
+          commit_user_name: ${{ steps.import-gpg.outputs.name }}
+          commit_user_email: ${{ steps.import-gpg.outputs.email }}
+  check:
+    needs:
+      - matrix
+      - build
+      - commit
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.matrix.outputs.matrix) }}
+    steps:
+      - name: generate-token
+        uses: actions/create-github-app-token@v2
+        id: generate-token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      - name: set-successful-check
+        uses: LouisBrunner/checks-action@v2.0.0
+        with:
+          sha: ${{ needs.commit.outputs.commit_sha || needs.build.outputs.head_ref }}
+          token: "${{ steps.generate-token.outputs.token }}"
+          name: "build-${{ matrix.arch }}-${{ matrix.os }}"
+          details_url: "${{ steps.job-url.outputs.url }}"
+          conclusion: success
+          output: |-
+            {
+              "name": "Build ${{ matrix.arch }}-${{ matrix.os }}",
+              "summary": "Finished building dotfiles for `build-${{ matrix.arch }}-${{ matrix.os }}`: ✅"
+            }
