@@ -25,7 +25,7 @@ Latest release can be found [here](https://github.com/M3L6H/dotfiles-tmux/releas
 
 ## dependencies
 
-The following dependencies are required to be installed for the dotfiles to work.
+The following dependencies must be installed for the dotfiles to work.
 If using the included flake, they will be installed automatically.
 
 - a clipboard program:
