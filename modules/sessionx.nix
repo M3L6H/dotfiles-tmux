@@ -37,7 +37,7 @@ with lib;
         {
           plugin = tmux-sessionx;
           extraConfig = ''
-            set -g @sessionx-bind "C-o"
+            set -g @sessionx-bind "M-o"
             set -g @sessionx-prefix off
             set -g @sessionx-bind-tmuxinator-list "ctrl-t"
 
