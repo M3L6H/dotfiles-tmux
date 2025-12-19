@@ -98,7 +98,7 @@ with lib;
           set -g @LEFT_SEP ""
           set -g @RIGHT_SEP ""
 
-          # Boder colors
+          # Border colors
           set-option -g pane-active-border-style "fg=#{@ACTIVE_BORDER_COL}"
           set-option -g pane-border-style "fg=#{@INACTIVE_BORDER_COL}"
 
