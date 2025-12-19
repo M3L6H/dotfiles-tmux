@@ -16,6 +16,8 @@ with lib;
   };
 
   imports = [
+    (import ./fingers.nix flake-args)
+    (import ./line-numbers.nix flake-args)
     (import ./sessionx.nix flake-args)
     (import ./tmuxinator.nix flake-args)
   ];
@@ -47,9 +49,6 @@ with lib;
           # Reload tmux with PREFIX+r
           bind r source-file ~/.config/tmux/tmux.conf
 
-          # Enter copy mode with Alt-v
-          bind-key -n 'M-v' copy-mode
-
           # Disable confirmation for closing pane
           bind x kill-pane
 
@@ -73,6 +72,9 @@ with lib;
           bind '"' split-window -v -c "#{pane_current_path}"
           bind % split-window -h -c "#{pane_current_path}"
 
+          # Unbind time
+          unbind t
+
           # Increase scrollback buffer size
           set-option -g history-limit 100000
 
@@ -84,9 +86,11 @@ with lib;
 
           # Status bar
           set -g @ACCENT_COL "#737c73"
+          set -g @ACTIVE_BORDER_COL "fg=#a292a3"
           set -g @ALERT_COL "#c4746e"
           set -g @BG_BAR_COL "#282727"
           set -g @BG_PANE_COL "#1D1C19"
+          set -g @INACTIVE_BORDER_COL "#625e5a"
           set -g @SELECTION_COL "#393836"
           set -g @TEXT_COL "#c8c093"
 
@@ -94,10 +98,22 @@ with lib;
           set -g @LEFT_SEP ""
           set -g @RIGHT_SEP ""
 
+          # Border colors
+          set-option -g pane-active-border-style "fg=#{@ACTIVE_BORDER_COL}"
+          set-option -g pane-border-style "fg=#{@INACTIVE_BORDER_COL}"
+
+          # Message style
+          set-option -g message-style "bg=#{@BG_BAR_COL},fg=#{@TEXT_COL}"
+
+          # Prompt cursor colour
+          set-option -g prompt-cursor-colour "#737c73"
+
+          # Status bar
           set-option -g status-position top
           set-option -g status-left-length 24
           set-option -g status-left "#{@ICON_PD}#{?client_prefix,#[fg=#{@ALERT_COL}],#[fg=#{@ACCENT_COL}]}#[bg=default]#{@LEFT_SEP}#{?client_prefix,#[fg=#{@BG_PANE_COL}],#[fg=#{@BG_PANE_COL}]}#{?client_prefix,#[bg=#{@ALERT_COL}],#[bg=#{@ACCENT_COL}]}󱚝  #{=16:session_name}#{?client_prefix,#[fg=#{@ALERT_COL}],#[fg=#{@ACCENT_COL}]}#[bg=default]#{@RIGHT_SEP}#{@ICON_PD}"
           set-option -g status-right ""
+
           # Transparent status background
           set-option -g status-style bg=default
           set-window-option -g window-status-separator ""
@@ -105,6 +121,10 @@ with lib;
           set-window-option -g window-status-format "#[fg=#{@TEXT_COL},bg=default] #I #W "
           set-window-option -g window-status-activity-style "bold"
           set-window-option -g window-status-bell-style "bold"
+
+          set -g visual-activity off
+          set -g visual-bell off
+          set -g visual-silence on
         '';
 
         keyMode = "vi";
