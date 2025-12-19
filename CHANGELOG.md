@@ -4,6 +4,10 @@
 
 ## 0.1.2
 
+### Added
+
+- [tmux-open](https://github.com/tmux-plugins/tmux-open) plugin
+
 ### Changed
 
 - changed status-left-length from 11 to 24

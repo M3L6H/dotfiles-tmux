@@ -16,6 +16,7 @@ with lib;
   };
 
   imports = [
+    (import ./open.nix flake-args)
     (import ./sessionx.nix flake-args)
     (import ./tmuxinator.nix flake-args)
   ];
