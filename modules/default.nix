@@ -17,6 +17,7 @@ with lib;
 
   imports = [
     (import ./fingers.nix flake-args)
+    (import ./line-numbers.nix flake-args)
     (import ./sessionx.nix flake-args)
     (import ./tmuxinator.nix flake-args)
   ];
@@ -47,9 +48,6 @@ with lib;
 
           # Reload tmux with PREFIX+r
           bind r source-file ~/.config/tmux/tmux.conf
-
-          # Enter copy mode with Alt-v
-          bind-key -n 'M-v' copy-mode
 
           # Disable confirmation for closing pane
           bind x kill-pane

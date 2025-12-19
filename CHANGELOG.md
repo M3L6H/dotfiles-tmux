@@ -6,6 +6,7 @@
 
 ### Added
 
+- [line-numbers](https://www.reddit.com/r/tmux/comments/1kozf64/copy_mode_with_relative_line_numbers/) script
 - [tmux-fingers](https://github.com/Morantron/tmux-fingers) plugin
 
 ### Changed
