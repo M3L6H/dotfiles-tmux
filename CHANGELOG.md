@@ -2,11 +2,11 @@
 
 # Changelog
 
-## 0.1.2
+## 0.2.0
 
 ### Added
 
-- [tmux-open](https://github.com/tmux-plugins/tmux-open) plugin
+- [tmux-fingers](https://github.com/Morantron/tmux-fingers) plugin
 
 ### Changed
 

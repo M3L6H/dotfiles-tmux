@@ -16,7 +16,7 @@ with lib;
   };
 
   imports = [
-    (import ./open.nix flake-args)
+    (import ./fingers.nix flake-args)
     (import ./sessionx.nix flake-args)
     (import ./tmuxinator.nix flake-args)
   ];
@@ -123,6 +123,10 @@ with lib;
           set-window-option -g window-status-format "#[fg=#{@TEXT_COL},bg=default] #I #W "
           set-window-option -g window-status-activity-style "bold"
           set-window-option -g window-status-bell-style "bold"
+
+          set -g visual-activity off
+          set -g visual-bell off
+          set -g visual-silence on
         '';
 
         keyMode = "vi";
