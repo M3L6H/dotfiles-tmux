@@ -2,6 +2,13 @@
 
 # Changelog
 
+## 0.1.2
+
+### Changed
+
+- changed status-left-length from 11 to 24
+- truncate session name at 16 chars
+
 ## 0.1.1
 
 ### Changed

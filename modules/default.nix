@@ -95,8 +95,8 @@ with lib;
           set -g @RIGHT_SEP ""
 
           set-option -g status-position top
-          set-option -g status-left-length 11
-          set-option -g status-left "#{@ICON_PD}#{?client_prefix,#[fg=#{@ALERT_COL}],#[fg=#{@ACCENT_COL}]}#[bg=default]#{@LEFT_SEP}#{?client_prefix,#[fg=#{@BG_PANE_COL}],#[fg=#{@BG_PANE_COL}]}#{?client_prefix,#[bg=#{@ALERT_COL}],#[bg=#{@ACCENT_COL}]}󱚝  #S#{?client_prefix,#[fg=#{@ALERT_COL}],#[fg=#{@ACCENT_COL}]}#[bg=default]#{@RIGHT_SEP}#{@ICON_PD}"
+          set-option -g status-left-length 24
+          set-option -g status-left "#{@ICON_PD}#{?client_prefix,#[fg=#{@ALERT_COL}],#[fg=#{@ACCENT_COL}]}#[bg=default]#{@LEFT_SEP}#{?client_prefix,#[fg=#{@BG_PANE_COL}],#[fg=#{@BG_PANE_COL}]}#{?client_prefix,#[bg=#{@ALERT_COL}],#[bg=#{@ACCENT_COL}]}󱚝  #{=16:session_name}#{?client_prefix,#[fg=#{@ALERT_COL}],#[fg=#{@ACCENT_COL}]}#[bg=default]#{@RIGHT_SEP}#{@ICON_PD}"
           set-option -g status-right ""
           # Transparent status background
           set-option -g status-style bg=default
