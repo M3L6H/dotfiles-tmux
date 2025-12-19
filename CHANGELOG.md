@@ -8,6 +8,7 @@
 
 - changed status-left-length from 11 to 24
 - truncate session name at 16 chars
+- unbind time key `t`
 - update prompt cursor, message, and border colors
 
 ## 0.1.1

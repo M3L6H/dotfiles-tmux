@@ -73,6 +73,9 @@ with lib;
           bind '"' split-window -v -c "#{pane_current_path}"
           bind % split-window -h -c "#{pane_current_path}"
 
+          # Unbind time
+          unbind t
+
           # Increase scrollback buffer size
           set-option -g history-limit 100000
 
