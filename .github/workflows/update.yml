@@ -1,13 +1,10 @@
 name: update-flake-lock
-
 on:
   schedule:
     - cron: '3 6 * * 1' # Run weekly on Mondays
-
 permissions:
   contents: write
   pull-requests: write
-
 jobs:
   lockfile:
     runs-on: ubuntu-latest
@@ -18,7 +15,7 @@ jobs:
         uses: DeterminateSystems/determinate-nix-action@v3
       - name: update-flake-lock
         if: ${{ github.event_name != 'pull_request' }}
-        uses: DeterminateSystems/update-flake-lock@27
+        uses: DeterminateSystems/update-flake-lock@28
         with:
           commit-msg: 'build(deps): update flake.lock'
           pr-reviewers: m3l6h
