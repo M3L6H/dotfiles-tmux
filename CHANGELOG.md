@@ -2,6 +2,21 @@
 
 # Changelog
 
+## 0.2.1
+
+### Added
+
+- Added additional default command prefix
+
+### Fixed
+
+- fixed fingers colors not showing up initially
+- fixed fingers command copy copying trailing whitespace
+
+### Changed
+
+- make fingers command prefix configurable
+
 ## 0.2.0
 
 ### Added
