@@ -18,6 +18,7 @@ pkgs.testers.runNixOSTest {
       {
         imports = [
           home-manager.nixosModules.home-manager
+          impermanenceModule
         ];
 
         users.users.${username} = {
@@ -33,7 +34,6 @@ pkgs.testers.runNixOSTest {
             { ... }:
             {
               imports = [
-                impermanenceModule
                 module
               ];
 
