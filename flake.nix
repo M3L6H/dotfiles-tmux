@@ -36,7 +36,7 @@
         inherit pname;
       };
 
-      impermanenceModule = impermanence.homeManagerModules.impermanence;
+      impermanenceModule = impermanence.nixosModules.impermanence;
     in
     flake-parts.lib.mkFlake { inherit inputs; } {
       inherit systems;
