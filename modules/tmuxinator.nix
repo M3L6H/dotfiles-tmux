@@ -26,12 +26,8 @@ with lib;
         tmuxinator
       ];
 
-      home.persistence."/persist/home/${config.home.username}" = lib.mkIf parent.impermanence.enable {
-        directories = [
-          ".config/tmuxinator"
-        ];
-
-        allowOther = false;
-      };
+      home.persistence."/persist".directories = lib.mkIf parent.impermanence.enable [
+        ".config/tmuxinator"
+      ];
     };
 }
