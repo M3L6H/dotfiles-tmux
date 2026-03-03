@@ -22,12 +22,15 @@ with lib;
       cfg = parent.tmuxinator;
     in
     mkIf (enable && cfg.enable) {
-      home.packages = with pkgs; [
-        tmuxinator
-      ];
-
-      home.persistence."/persist".directories = lib.mkIf parent.impermanence.enable [
-        ".config/tmuxinator"
-      ];
+      home = {
+        packages = with pkgs; [
+          tmuxinator
+        ];
+      }
+      // lib.optionalAttrs parent.impermanence.enable {
+        persistence."/persist".directories = [
+          ".config/tmuxinator"
+        ];
+      };
     };
 }

@@ -2,11 +2,17 @@
 
 # Changelog
 
+## TBD
+
+### Fixed
+
+- don't use persistence when impermanence is disabled
+
 ## 0.2.1
 
 ### Added
 
-- Added additional default command prefix
+- added additional default command prefix
 
 ### Fixed
 
