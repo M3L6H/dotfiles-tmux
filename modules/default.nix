@@ -55,6 +55,9 @@ with lib;
           # Close all panes except current
           bind X confirm-before -p "close all panes except current? (y/n)" 'kill-pane -a'
 
+          # Detach
+          bind q confirm-before -p "detatch from current session #S? (y/n)" detach -P
+
           # Kill session
           bind Q confirm-before -p "kill-session #S? (y/n)" kill-session
 
