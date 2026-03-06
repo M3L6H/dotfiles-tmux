@@ -4,6 +4,10 @@
 
 ## TBD
 
+### Added
+
+- bind `q` to detach
+
 ### Fixed
 
 - don't use persistence when impermanence is disabled
