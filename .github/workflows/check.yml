@@ -23,7 +23,7 @@ jobs:
         with:
           ref: ${{ github.event.workflow_run.head_sha || '' }}
       - name: install-nix
-        uses: DeterminateSystems/nix-installer-action@v21
+        uses: DeterminateSystems/nix-installer-action@v22
         with:
           github-token: ${{ steps.generate-token.outputs.token }}
       - name: nix-flake-check
