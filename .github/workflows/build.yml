@@ -140,7 +140,7 @@ jobs:
               "summary": "Building dotfiles for `build-${{ matrix.arch }}-${{ matrix.os }}`"
             }
       - name: install-nix
-        uses: DeterminateSystems/nix-installer-action@v21
+        uses: DeterminateSystems/nix-installer-action@v22
         with:
           github-token: ${{ steps.generate-token.outputs.token }}
       - name: build-dotfiles
