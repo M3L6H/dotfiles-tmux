@@ -127,7 +127,7 @@ jobs:
           echo "url=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/job/$job_id" >> "$GITHUB_OUTPUT"
       - name: register-check
         id: check
-        uses: LouisBrunner/checks-action@v2.0.0
+        uses: LouisBrunner/checks-action@v3.0.0
         with:
           sha: ${{ steps.pr.outputs.head_ref }}
           token: "${{ steps.generate-token.outputs.token }}"
@@ -160,7 +160,7 @@ jobs:
           include-hidden-files: true
       - name: update-check
         if: always()
-        uses: LouisBrunner/checks-action@v2.0.0
+        uses: LouisBrunner/checks-action@v3.0.0
         with:
           sha: "${{ steps.commit.outputs.changes_detected && steps.commit.outputs.commit_hash || steps.pull.outputs.sha }}"
           token: "${{ steps.generate-token.outputs.token }}"
@@ -226,7 +226,7 @@ jobs:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
       - name: set-successful-check
-        uses: LouisBrunner/checks-action@v2.0.0
+        uses: LouisBrunner/checks-action@v3.0.0
         with:
           sha: ${{ needs.commit.outputs.commit_sha || needs.build.outputs.head_ref }}
           token: "${{ steps.generate-token.outputs.token }}"
