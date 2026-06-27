@@ -41,7 +41,7 @@ jobs:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
       - name: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: bundle-artifact
         run: |-
           d="$(date -u +%Y-%m-%d)"
