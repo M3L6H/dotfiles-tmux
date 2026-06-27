@@ -94,7 +94,7 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
       - name: get-pr-branch
         id: pr
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           github-token: ${{ steps.generate-token.outputs.token }}
           script: |
