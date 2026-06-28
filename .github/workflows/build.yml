@@ -106,7 +106,7 @@ jobs:
             });
             core.setOutput('head_ref', pr.head.ref);
       - name: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ steps.pr.outputs.head_ref }}
           fetch-depth: 0
@@ -181,7 +181,7 @@ jobs:
       contents: write
     steps:
       - name: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ needs.build.outputs.head_ref }}
           fetch-depth: 0
