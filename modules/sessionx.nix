@@ -41,6 +41,9 @@ with lib;
             set -g @sessionx-prefix off
             set -g @sessionx-bind-tmuxinator-list "ctrl-t"
 
+            set -g @sessionx-bind-select-up 'alt-k'
+            set -g @sessionx-bind-select-down 'alt-j'
+
             set -g @sessionx-tmuxinator-mode "on"
             ${if zsh.zoxide.enable then "set -g @sessionx-zoxide-mode 'on'" else ""}
           '';
