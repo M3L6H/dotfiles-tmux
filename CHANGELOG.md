@@ -2,11 +2,15 @@
 
 # Changelog
 
-## TBD
+## 0.3.0
 
 ### Added
 
 - bind `q` to detach
+
+### Changed
+
+- use <A-k> and <A-j> for moving up and down in picker and cmp
 
 ### Fixed
 
