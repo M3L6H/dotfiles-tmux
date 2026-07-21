@@ -14,6 +14,12 @@
     impermanence = {
       url = "github:nix-community/impermanence";
     };
+
+    sessionx = {
+      url = "github:m3l6h/tmux-sessionx?ref=tmuxinator-args";
+      # url = "/home/m3l6h/files/dev/omerxx/tmux-sessionx";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -33,7 +39,7 @@
       version = "0.2.1";
 
       homeModule = import ./modules {
-        inherit pname;
+        inherit inputs pname;
       };
 
       impermanenceModule = impermanence.nixosModules.impermanence;

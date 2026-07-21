@@ -2,6 +2,12 @@
 
 # Changelog
 
+## tbd
+
+### Changed
+
+- send `--suppress-tmux-version-warning` to tmuxinator from sessionx
+
 ## 0.3.0
 
 ### Added

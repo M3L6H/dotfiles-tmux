@@ -1,4 +1,4 @@
-{ pname, ... }:
+{ inputs, pname, ... }:
 {
   config,
   lib,
@@ -21,6 +21,8 @@ with lib;
       enable = parent.enable;
       cfg = parent.sessionx;
 
+      system = pkgs.stdenv.hostPlatform.system;
+
       # integration with my custom zsh
       zsh =
         config.m3l6h.zsh or {
@@ -35,7 +37,7 @@ with lib;
 
       programs.tmux.plugins = with pkgs.tmuxPlugins; [
         {
-          plugin = tmux-sessionx;
+          plugin = inputs.sessionx.packages.${system}.default;
           extraConfig = ''
             set -g @sessionx-bind "M-o"
             set -g @sessionx-prefix off
@@ -45,6 +47,7 @@ with lib;
             set -g @sessionx-bind-select-down 'alt-j'
 
             set -g @sessionx-tmuxinator-mode "on"
+            set -g @sessionx-tmuxinator-args "--suppress-tmux-version-warning"
             ${if zsh.zoxide.enable then "set -g @sessionx-zoxide-mode 'on'" else ""}
           '';
         }
