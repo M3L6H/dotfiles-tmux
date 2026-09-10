@@ -35,7 +35,7 @@ with lib;
       ];
       programs.fzf.enable = true; # Used for fuzzy finding
 
-      programs.tmux.plugins = with pkgs.tmuxPlugins; [
+      programs.tmux.plugins = [
         {
           plugin = inputs.sessionx.packages.${system}.default;
           extraConfig = ''
