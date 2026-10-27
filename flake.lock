@@ -164,16 +164,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1789165384,
-        "narHash": "sha256-ALTYdWesLVHAbsVHmF2/J4+bhxQKXNZ0/TwJtqtX6+s=",
-        "owner": "m3l6h",
+        "lastModified": 1792593644,
+        "narHash": "sha256-5uQsI6I5ITadT5wBVtdWTV5PNBYtqPS4Xf3EVTSzRiY=",
+        "owner": "omerxx",
         "repo": "tmux-sessionx",
-        "rev": "6a87a497de23610a0849f689dd2d9af073934032",
+        "rev": "8df6df56639acedb5343a6db02cf58120ff09ef7",
         "type": "github"
       },
       "original": {
-        "owner": "m3l6h",
-        "ref": "tmuxinator-args",
+        "owner": "omerxx",
         "repo": "tmux-sessionx",
         "type": "github"
       }

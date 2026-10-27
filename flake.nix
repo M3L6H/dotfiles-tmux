@@ -16,7 +16,8 @@
     };
 
     sessionx = {
-      url = "github:m3l6h/tmux-sessionx?ref=tmuxinator-args";
+      url = "github:omerxx/tmux-sessionx";
+      # url = "github:m3l6h/tmux-sessionx?ref=tmuxinator-args";
       # url = "/home/m3l6h/files/dev/omerxx/tmux-sessionx";
       inputs.nixpkgs.follows = "nixpkgs";
     };
