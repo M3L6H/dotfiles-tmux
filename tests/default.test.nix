@@ -65,6 +65,6 @@ pkgs.testers.runNixOSTest {
     machine.succeed("su - ${username} -c 'tmux -V'")
 
     # Copy files for output
-    machine.copy_from_vm("/home/${username}/.config/tmux/tmux.conf", "output")
+    machine.copy_from_machine("/home/${username}/.config/tmux/tmux.conf", "output")
   '';
 }
