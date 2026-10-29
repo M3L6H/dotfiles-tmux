@@ -49,6 +49,8 @@ with lib;
             set -g @sessionx-tmuxinator-mode "on"
             set -g @sessionx-tmuxinator-args "--suppress-tmux-version-warning"
             ${if zsh.zoxide.enable then "set -g @sessionx-zoxide-mode 'on'" else ""}
+
+            set -g @sessionx-git-branch 'on'
           '';
         }
       ];

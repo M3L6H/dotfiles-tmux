@@ -87,6 +87,23 @@ with lib;
           # No auto renaming
           set-option -g allow-rename off
 
+          # Color mode
+          ${
+            if config.terminal.emulator or "default" == "ghostty" then
+              ''
+                set -as terminal-features ",xterm-ghostty:RGB"
+                set -as terminal-overrides ",xterm-ghostty:Tc"
+                set -g popup-style 'bg=default'
+              ''
+            else
+              ''
+                set -as terminal-features ",xterm*:RGB"
+                set -as terminal-overrides ",xterm*:Tc"
+                set -g default-terminal "tmux-256color"
+              ''
+          }
+
+
           # Status bar
           set -g @ACCENT_COL "#737c73"
           set -g @ACTIVE_BORDER_COL "fg=#a292a3"
@@ -124,6 +141,7 @@ with lib;
           set-window-option -g window-status-format "#[fg=#{@TEXT_COL},bg=default] #I #W "
           set-window-option -g window-status-activity-style "bold"
           set-window-option -g window-status-bell-style "bold"
+          set -g window-status-current-style none
 
           set -g visual-activity off
           set -g visual-bell off

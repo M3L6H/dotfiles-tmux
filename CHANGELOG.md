@@ -7,6 +7,13 @@
 ### Changed
 
 - send `--suppress-tmux-version-warning` to tmuxinator from sessionx
+- show git branch in sessionx
+
+### Fixed
+
+- support 256 colors in ghostty
+- use copy_from_machine instead of copy_from_vm for generating dotfiles
+- remove underline from current window name
 
 ## 0.3.0
 
